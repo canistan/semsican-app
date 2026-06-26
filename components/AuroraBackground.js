@@ -65,7 +65,7 @@ export default function AuroraBackground() {
   }));
 
   return (
-    <View style={StyleSheet.absoluteFillObject} className="bg-zinc-950 overflow-hidden">
+    <View style={[StyleSheet.absoluteFillObject, { backgroundColor: '#09090b' }]} className="overflow-hidden">
       {/* Background Dark Gradient to match the theme */}
       <LinearGradient
         colors={['#09090b', '#000000']}
