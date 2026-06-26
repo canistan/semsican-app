@@ -82,10 +82,10 @@ export default function AuroraBackground() {
 const styles = StyleSheet.create({
   blob: {
     position: 'absolute',
-    width: 300,
-    height: 300,
-    borderRadius: 150,
-    opacity: 0.15,
+    width: 450,
+    height: 450,
+    borderRadius: 225,
+    opacity: 0.25,
   },
   blob1: {
     backgroundColor: '#14b8a6', // Teal 500
