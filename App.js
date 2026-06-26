@@ -25,6 +25,7 @@ import './global.css';
 import AuroraBackground from './components/AuroraBackground';
 import Marquee from './components/Marquee';
 import ScrollIndicator from './components/ScrollIndicator';
+import QuizGame from './components/QuizGame';
 import { useState, useEffect, useRef } from 'react';
 import { useFonts } from 'expo-font';
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold } from '@expo-google-fonts/inter';
@@ -87,10 +88,27 @@ const techStack = [
 export default function App() {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [projectsYOffset, setProjectsYOffset] = useState(0);
+  
+  // Easter Egg states
+  const [quizVisible, setQuizVisible] = useState(false);
+  const [profileTapCount, setProfileTapCount] = useState(0);
+  
   const scrollViewRef = useRef(null);
 
   const scrollToProjects = () => {
     scrollViewRef.current?.scrollTo({ y: projectsYOffset, animated: true });
+  };
+
+  const handleProfileTap = () => {
+    const newCount = profileTapCount + 1;
+    setProfileTapCount(newCount);
+    if (newCount === 3) {
+      setQuizVisible(true);
+      setProfileTapCount(0);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    } else {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
   };
 
   useEffect(() => {
@@ -157,13 +175,17 @@ export default function App() {
           >
             {/* Dinamik Profil Resmi */}
             <View className="items-center mb-6">
-              <View className="w-32 h-32 rounded-full border-4 border-zinc-800 p-1 shadow-2xl shadow-teal-500/20 overflow-hidden bg-zinc-900">
+              <TouchableOpacity 
+                activeOpacity={0.9} 
+                onPress={handleProfileTap}
+                className="w-32 h-32 rounded-full border-4 border-zinc-800 p-1 shadow-2xl shadow-teal-500/20 overflow-hidden bg-zinc-900"
+              >
                 <Image 
                   source={{ uri: travelPhotos[currentPhotoIndex].src }} 
                   className="w-full h-full rounded-full"
                   resizeMode="cover"
                 />
-              </View>
+              </TouchableOpacity>
               <View className="mt-3 flex-row items-center bg-zinc-900/80 px-3 py-1 rounded-full border border-zinc-800">
                 <Text className="text-lg mr-2">{travelPhotos[currentPhotoIndex].flag}</Text>
                 <Text className="text-zinc-300 font-sans-medium text-xs">{travelPhotos[currentPhotoIndex].country}</Text>
@@ -511,6 +533,12 @@ export default function App() {
 
         </ScrollView>
       </SafeAreaView>
+
+      <QuizGame 
+        visible={quizVisible} 
+        onClose={() => setQuizVisible(false)} 
+        onContact={openMail}
+      />
     </SafeAreaProvider>
   );
 }
